@@ -88,6 +88,6 @@ Distributed under the MIT License. See the \`LICENSE\` file for more details.
 
 ## Contact
 
-Your Name - [your.email@example.com](mailto:your.email@example.com)
+Amar Muric - [muricamar2004@gmail.com](mailto:muricamar2004@gmail.com)
 
-Project Link: [https://github.com/yourusername/selectron](https://github.com/yourusername/selectron)
+Project Link: [https://github.com/AmarMuric04/Selectron](https://github.com/AmarMuric04/Selectron)
