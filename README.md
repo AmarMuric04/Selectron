@@ -1,4 +1,4 @@
-# Selectron
+# Selectron (In Development)
 
 Selectron is a powerful, cross-platform desktop Todo application built using Electron, Express, MongoDB (Mongoose) & React-Vite. It offers a secure, intuitive interface for managing your tasks with ease—complete with authentication and all the essential features for handling your daily todos.
 
