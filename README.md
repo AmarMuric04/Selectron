@@ -1,34 +1,69 @@
-# my-app
+const readme = `# Selectron
 
-An Electron application with React and TypeScript
+Selectron is a powerful, cross-platform desktop Todo application built using Electron, Express, MongoDB (Mongoose) & React-Vite. It offers a secure, intuitive interface for managing your tasks with ease—complete with authentication and all the essential features for handling your daily todos.
 
-## Recommended IDE Setup
+## Features
 
-- [VSCode](https://code.visualstudio.com/) + [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) + [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+- **Cross-platform Desktop App:** Built with [Electron](https://electronjs.org/)
+- **Modern Frontend:** Developed with [React](https://reactjs.org/) and [Vite](https://vitejs.dev/)
+- **Robust Backend:** Powered by [Express](https://expressjs.com/)
+- **Database Integration:** Uses [MongoDB](https://www.mongodb.com/) with [Mongoose](https://mongoosejs.com/)
+- **Authentication:** Secure login and registration system
+- **CRUD Operations:** Create, read, update, and delete todos
+- **Responsive Design:** Enjoy a seamless experience across different screen sizes
 
-## Project Setup
+## Getting Started
 
-### Install
+### Prerequisites
 
-```bash
-$ npm install
-```
+Before you begin, ensure you have met the following requirements:
+- Node.js (>=14.x) installed on your machine
+- MongoDB installed locally or access to a MongoDB Atlas cluster
 
-### Development
+### Installation
 
-```bash
-$ npm run dev
-```
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/selectron.git
+   cd selectron
+   ```
 
-### Build
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-```bash
-# For windows
-$ npm run build:win
+3. Configure your environment variables:
+   - Create a \`.env\` file in the root directory.
+   - Add your MongoDB connection string and other configuration details:
+     ```
+     MONGO_URI=your_mongo_connection_string
+     PORT=your_desired_port
+     JWT_SECRET=your_jwt_secret
+     ```
 
-# For macOS
-$ npm run build:mac
+4. Start the application:
+   ```bash
+   npm start
+   ```
 
-# For Linux
-$ npm run build:linux
-```
+## Usage
+
+- **Authentication:** Register and log in to manage your todos.
+- **Task Management:** Create, update, mark as complete, and delete your tasks.
+- **Real-time Updates:** Experience fast, real-time interactions powered by Electron.
+
+## Contributing
+
+Contributions are welcome! Please fork the repository and submit your pull requests. For major changes, open an issue first to discuss what you would like to change.
+
+## License
+
+Distributed under the MIT License. See the \`LICENSE\` file for more details.
+
+## Contact
+
+Your Name - [your.email@example.com](mailto:your.email@example.com)
+
+Project Link: [https://github.com/yourusername/selectron](https://github.com/yourusername/selectron)
+`;
