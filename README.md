@@ -44,8 +44,33 @@ Before you begin, ensure you have met the following requirements:
 
 4. Start the application:
    ```bash
-   npm start
+   npm run dev
    ```
+
+5. If you want to contribute, be sure to use:
+```bash
+npm run dev:watch
+```
+
+For hot reloading in the backend of electron as well.
+
+## Build the app
+
+- **Windows**
+```bash
+npm run build:win
+```
+
+- **Linux**
+```bash
+npm run build:linux
+```
+
+- **Mac**
+```bash
+npm run build:mac
+```
+
 
 ## Usage
 
