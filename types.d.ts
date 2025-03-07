@@ -5,10 +5,12 @@ type User = {
   password: string
 }
 
-type Todo = {
+type Todo = string
+
+type Todos = {
   creator: string
-  uncompleted: string[]
-  completed: string[]
+  uncompleted: Todo[]
+  completed: Todo[]
 }
 
 type AddUserType = {

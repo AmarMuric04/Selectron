@@ -29,10 +29,12 @@
     "@huggingface/inference": "^3.5.1",
     "@mui/icons-material": "^6.4.7",
     "@mui/material": "^6.4.7",
+    "@radix-ui/react-checkbox": "^1.1.4",
     "@tailwindcss/vite": "^4.0.10",
     "@types/tailwindcss": "^3.0.11",
     "axios": "^1.8.2",
     "bcryptjs": "^3.0.2",
+    "clsx": "^2.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "electron-updater": "^6.3.9",
@@ -44,7 +46,8 @@
     "react-router-dom": "^7.2.0",
     "react-spinners": "^0.15.0",
     "react-toastify": "^11.0.5",
-    "react-use": "^17.6.0"
+    "react-use": "^17.6.0",
+    "tailwind-variants": "^0.3.1"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "^3.0.0",
