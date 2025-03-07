@@ -3,6 +3,7 @@ import cors from 'cors'
 import { connectToDatabase } from '../database/connection'
 import dotenv from 'dotenv'
 import UserRouter from './routes/user'
+import TodoRouter from './routes/todo'
 dotenv.config()
 
 const app = express()
@@ -10,6 +11,7 @@ app.use(express.json())
 app.use(cors())
 
 app.use('/user', UserRouter)
+app.use('/todo', TodoRouter)
 
 app.use((error, req, res, next) => {
   console.error(error)

@@ -13,12 +13,12 @@ const router = createBrowserRouter([
         element: <Todo />
       },
       {
-        path: '/',
-        index: true,
+        path: '/login',
         element: <Auth type="login" />
       },
       {
-        path: '/signup',
+        path: '/',
+        index: true,
         element: <Auth type="signup" />
       }
     ]

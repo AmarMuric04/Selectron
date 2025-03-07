@@ -5,7 +5,9 @@ const api = {
   signUp: async (userData: User): Promise<AddUserType> => ipcRenderer.invoke('add-user', userData),
   logIn: async (userData: { email: string; password: string }): Promise<AddUserType> =>
     ipcRenderer.invoke('log-in', userData),
-  getUsers: async (): Promise<User[]> => ipcRenderer.invoke('get-users')
+  getUsers: async (): Promise<User[]> => ipcRenderer.invoke('get-users'),
+  addTodo: async (todo: string): Promise<Todo> => ipcRenderer.invoke('add-todo', todo),
+  getTodos: async (): Promise<Todo[]> => ipcRenderer.invoke('get-todos')
 }
 
 if (process.contextIsolated) {

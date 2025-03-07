@@ -225,7 +225,7 @@ const AuthForm: React.FC<{ type: string }> = ({ type }) => {
             Don{"'"}t have an account?{' '}
             <NavLink
               className="font-semibold hover:underline transition-all cursor-pointer text-zinc-400 hover:text-zinc-500"
-              to="/signup"
+              to="/"
             >
               Create one!
             </NavLink>
@@ -235,7 +235,7 @@ const AuthForm: React.FC<{ type: string }> = ({ type }) => {
             Already have an account?{' '}
             <NavLink
               className="font-semibold hover:underline transition-all cursor-pointer text-zinc-400 hover:text-zinc-500"
-              to="/"
+              to="/login"
             >
               Log in now!
             </NavLink>
