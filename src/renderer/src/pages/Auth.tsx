@@ -8,7 +8,7 @@ interface AuthProps {
 const Auth: React.FC<AuthProps> = ({ type }) => {
   return (
     <Background>
-      <section className="grid place-items-center min-h-screen w-full">
+      <section className="grid place-items-center h-full w-full">
         <AuthForm type={type} />
       </section>
     </Background>

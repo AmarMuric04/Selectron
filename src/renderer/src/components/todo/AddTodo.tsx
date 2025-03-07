@@ -1,8 +1,8 @@
-import { addTodo, setIsCreating, setNewTodosValue } from '@renderer/store/todoSlice'
+import { setNewTodosValue } from '@renderer/store/todoSlice'
 import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-const AddTodo: React.FC = () => {
+const AddTodo: React.FC<{ onCancel: () => void; onSave: () => void }> = ({ onCancel, onSave }) => {
   const dispatch = useDispatch()
   const { isCreating, newTodosValue } = useSelector((state) => state.todo)
   const inputRef = useRef(null)
@@ -24,22 +24,10 @@ const AddTodo: React.FC = () => {
         type="text"
       />
       <div className="flex gap-2 mt-4">
-        <button
-          className="cursor-pointer hover:text-zinc-500 transition-all"
-          onClick={() => dispatch(setIsCreating(false))}
-        >
+        <button className="cursor-pointer hover:text-zinc-500 transition-all" onClick={onCancel}>
           CANCEL
         </button>
-        <button
-          className="cursor-pointer hover:text-zinc-500 transition-all"
-          onClick={() => {
-            if (newTodosValue.trim()) {
-              dispatch(addTodo(newTodosValue.trim()))
-              dispatch(setNewTodosValue(''))
-              dispatch(setIsCreating(false))
-            }
-          }}
-        >
+        <button className="cursor-pointer hover:text-zinc-500 transition-all" onClick={onSave}>
           SAVE
         </button>
       </div>

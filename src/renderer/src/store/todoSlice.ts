@@ -28,10 +28,19 @@ const todoSlice = createSlice({
     },
     setNewTodosValue: (state, action: PayloadAction<string>) => {
       state.newTodosValue = action.payload
+    },
+    setCompleted: (state, action: PayloadAction<string>) => {
+      state.todos.completed.push(action.payload)
+      state.todos.uncompleted = state.todos.uncompleted.filter((e) => e !== action.payload)
+    },
+    setUncompleted: (state, action: PayloadAction<string>) => {
+      state.todos.uncompleted.push(action.payload)
+      state.todos.completed = state.todos.completed.filter((e) => e !== action.payload)
     }
   }
 })
 
-export const { addTodo, setIsCreating, setNewTodosValue } = todoSlice.actions
+export const { addTodo, setIsCreating, setNewTodosValue, setCompleted, setUncompleted } =
+  todoSlice.actions
 
 export default todoSlice.reducer
