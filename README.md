@@ -1,4 +1,4 @@
-const readme = `# Selectron
+# Selectron
 
 Selectron is a powerful, cross-platform desktop Todo application built using Electron, Express, MongoDB (Mongoose) & React-Vite. It offers a secure, intuitive interface for managing your tasks with ease—complete with authentication and all the essential features for handling your daily todos.
 
@@ -91,4 +91,3 @@ Distributed under the MIT License. See the \`LICENSE\` file for more details.
 Your Name - [your.email@example.com](mailto:your.email@example.com)
 
 Project Link: [https://github.com/yourusername/selectron](https://github.com/yourusername/selectron)
-`;
