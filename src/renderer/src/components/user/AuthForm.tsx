@@ -54,7 +54,7 @@ const AuthForm: React.FC<{ type: string }> = ({ type }) => {
     if (response.success) {
       setUserInfo(USER_INFO)
       notify(response.success, response.message)
-      navigate('/')
+      navigate('/todos')
     }
     if (!response.success) {
       setError(response.data)
@@ -82,8 +82,8 @@ const AuthForm: React.FC<{ type: string }> = ({ type }) => {
       <div className="flex items-center gap-2 self-center">
         <img className="w-8 h-8" src={Logo} alt="A display of an electron" />
         <p className="font-semibold font-mono">
-          <span className="text-purple-500">Select</span>
-          <span className="text-purple-400">ron</span>
+          <span className="text-zinc-500">Select</span>
+          <span className="text-zinc-400">ron</span>
         </p>
       </div>
       <div className="flex items-center flex-col text-center my-4">
@@ -106,17 +106,17 @@ const AuthForm: React.FC<{ type: string }> = ({ type }) => {
         helperText={error.find((err) => err?.path === 'email')?.msg}
         sx={{
           input: { color: 'white' },
-          '& label': { color: 'white' },
-          '& label.Mui-focused': { color: 'white' },
+          '& label': { color: '#3f3f46' },
+          '& label.Mui-focused': { color: '#3f3f46' },
           '& .MuiOutlinedInput-root': {
             '& fieldset': {
-              borderColor: 'white'
+              borderColor: '#3f3f46'
             },
             '&:hover fieldset': {
-              borderColor: 'white'
+              borderColor: '#3f3f46'
             },
             '&.Mui-focused fieldset': {
-              borderColor: 'white'
+              borderColor: '#3f3f46'
             }
           }
         }}
@@ -135,17 +135,17 @@ const AuthForm: React.FC<{ type: string }> = ({ type }) => {
           helperText={error.find((err) => err?.path === 'username')?.msg}
           sx={{
             input: { color: 'white' },
-            '& label': { color: 'white' },
-            '& label.Mui-focused': { color: 'white' },
+            '& label': { color: '#3f3f46' },
+            '& label.Mui-focused': { color: '#3f3f46' },
             '& .MuiOutlinedInput-root': {
               '& fieldset': {
-                borderColor: 'white'
+                borderColor: '#3f3f46'
               },
               '&:hover fieldset': {
-                borderColor: 'white'
+                borderColor: '#3f3f46'
               },
               '&.Mui-focused fieldset': {
-                borderColor: 'white'
+                borderColor: '#3f3f46'
               }
             }
           }}
@@ -157,20 +157,20 @@ const AuthForm: React.FC<{ type: string }> = ({ type }) => {
         sx={{
           '& .MuiOutlinedInput-root': {
             '& fieldset': {
-              borderColor: 'white'
+              borderColor: '#3f3f46'
             },
             '&:hover fieldset': {
-              borderColor: 'white'
+              borderColor: '#3f3f46'
             },
             '&.Mui-focused fieldset': {
-              borderColor: 'white'
+              borderColor: '#3f3f46'
             }
           }
         }}
       >
         <InputLabel
           htmlFor="outlined-adornment-password"
-          sx={{ color: 'white', '&.Mui-focused': { color: 'white' } }}
+          sx={{ color: '#3f3f46', '&.Mui-focused': { color: '#3f3f46' } }}
         >
           Password
         </InputLabel>
@@ -193,7 +193,7 @@ const AuthForm: React.FC<{ type: string }> = ({ type }) => {
                 onMouseDown={handleMouseDownPassword}
                 onMouseUp={handleMouseUpPassword}
                 edge="end"
-                sx={{ color: 'white' }} // icon color white
+                sx={{ color: 'white' }}
               >
                 {showPassword ? <VisibilityOff /> : <Visibility />}
               </IconButton>
@@ -210,7 +210,7 @@ const AuthForm: React.FC<{ type: string }> = ({ type }) => {
         sx={{
           textTransform: 'none',
           height: '50px',
-          bgcolor: 'purple.700',
+          bgcolor: '#3f3f46',
           borderRadius: '5px'
         }}
         onClick={handleAddUser}
@@ -224,7 +224,7 @@ const AuthForm: React.FC<{ type: string }> = ({ type }) => {
           <>
             Don{"'"}t have an account?{' '}
             <NavLink
-              className="font-semibold hover:underline transition-all cursor-pointer text-purple-400 hover:text-purple-500"
+              className="font-semibold hover:underline transition-all cursor-pointer text-zinc-400 hover:text-zinc-500"
               to="/signup"
             >
               Create one!
@@ -234,8 +234,8 @@ const AuthForm: React.FC<{ type: string }> = ({ type }) => {
           <>
             Already have an account?{' '}
             <NavLink
-              className="font-semibold hover:underline transition-all cursor-pointer text-purple-400 hover:text-purple-500"
-              to="/login"
+              className="font-semibold hover:underline transition-all cursor-pointer text-zinc-400 hover:text-zinc-500"
+              to="/"
             >
               Log in now!
             </NavLink>
