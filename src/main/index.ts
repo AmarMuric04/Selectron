@@ -2,7 +2,7 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import { addUserHandler, getUsersHandler } from './handlers/userHandler'
+import { signUpHandler, getUsersHandler, logInHandler } from './handlers/userHandler'
 
 import dotenv from 'dotenv'
 dotenv.config()
@@ -64,6 +64,8 @@ app.on('window-all-closed', () => {
   }
 })
 
-ipcMain.handle('add-user', addUserHandler)
+ipcMain.handle('add-user', signUpHandler)
+
+ipcMain.handle('log-in', logInHandler)
 
 ipcMain.handle('get-users', getUsersHandler)

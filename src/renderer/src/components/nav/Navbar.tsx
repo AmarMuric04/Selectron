@@ -1,18 +1,8 @@
-import {
-  AppBar,
-  Button,
-  Drawer,
-  IconButton,
-  List,
-  ListItem,
-  Toolbar,
-  Typography,
-  useMediaQuery,
-  useTheme
-} from '@mui/material'
+import { Drawer, IconButton, List, ListItem, Toolbar, useMediaQuery, useTheme } from '@mui/material'
 import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { FaHamburger } from 'react-icons/fa'
+import AnimatedButton from '../AnimatedButton'
 
 const Navbar: React.FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false)
@@ -26,35 +16,19 @@ const Navbar: React.FC = () => {
   const menuItems = (
     <>
       <NavLink to="/login">
-        <Button
-          sx={{
-            paddingX: '2rem'
-          }}
-          color="inherit"
-        >
-          <Typography>Log In</Typography>
-        </Button>
+        <p className="hover:text-purple-400 transition-all">Log In</p>
       </NavLink>
       <NavLink to="/signup">
-        <Button
-          sx={{
-            paddingX: '2rem'
-          }}
-          color="inherit"
-        >
-          <Typography>Sign Up</Typography>
-        </Button>
+        <AnimatedButton>Sign Up</AnimatedButton>
       </NavLink>
     </>
   )
 
   return (
     <>
-      <AppBar position="fixed">
+      <nav className="bg-zinc-800 text-white px-4">
         <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Electron Todo
-          </Typography>
+          <h1 className="flex-grow font-mono text-lg font-semibold">Selectron</h1>
           {isMobile ? (
             <>
               <IconButton color="inherit" onClick={() => toggleDrawer(true)}>
@@ -67,10 +41,10 @@ const Navbar: React.FC = () => {
               </Drawer>
             </>
           ) : (
-            menuItems
+            <div className="flex gap-2 items-center">{menuItems}</div>
           )}
         </Toolbar>
-      </AppBar>
+      </nav>
     </>
   )
 }

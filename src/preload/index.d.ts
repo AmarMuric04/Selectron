@@ -4,9 +4,9 @@ declare global {
   interface Window {
     electron: ElectronAPI
     api: {
-      addUser: (userData: User) => Promise<AddUserType>
+      signUp: (userData: User) => Promise<AddUserType>
+      logIn: (userData: { email: string; password: string }) => Promise<AddUserType>
       getUsers: () => Promise<User[]>
-      generateText: (prompt: string) => Promise<string>
     }
   }
 }

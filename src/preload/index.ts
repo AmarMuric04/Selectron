@@ -2,9 +2,10 @@ import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 
 const api = {
-  addUser: async (userData: User): Promise<AddUserType> => ipcRenderer.invoke('add-user', userData),
-  getUsers: async (): Promise<User[]> => ipcRenderer.invoke('get-users'),
-  generateText: (prompt: string): Promise<string> => ipcRenderer.invoke('generate-text', prompt)
+  signUp: async (userData: User): Promise<AddUserType> => ipcRenderer.invoke('add-user', userData),
+  logIn: async (userData: { email: string; password: string }): Promise<AddUserType> =>
+    ipcRenderer.invoke('log-in', userData),
+  getUsers: async (): Promise<User[]> => ipcRenderer.invoke('get-users')
 }
 
 if (process.contextIsolated) {

@@ -6,8 +6,7 @@ type User = {
 }
 
 type AddUserType = {
-  _id: string
-  user: User
-  token: string
-  expiry: string
+  success: boolean
+  message: string
+  data: User
 }

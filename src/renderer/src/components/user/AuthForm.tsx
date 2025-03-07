@@ -3,12 +3,13 @@ import TextField from '@mui/material/TextField'
 import {
   Button,
   FormControl,
+  FormHelperText,
   IconButton,
   InputAdornment,
   InputLabel,
   OutlinedInput
 } from '@mui/material'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import Logo from '@renderer/assets/icon.png'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
@@ -21,6 +22,9 @@ const USER_INFO = { username: '', email: '', password: '' }
 const AuthForm: React.FC<{ type: string }> = ({ type }) => {
   const [userInfo, setUserInfo] = useState<User>(USER_INFO)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<any>([])
+
+  const navigate = useNavigate()
 
   const [showPassword, setShowPassword] = React.useState(false)
 
@@ -36,34 +40,40 @@ const AuthForm: React.FC<{ type: string }> = ({ type }) => {
 
   useEffect(() => {
     setUserInfo(USER_INFO)
+    setError([])
+    setLoading(false)
   }, [type])
 
-  const handleAddUser = async (): Promise<AddUserType | null> => {
-    const userData: User = userInfo
+  const handleAddUser = async (): Promise<void> => {
+    setLoading(true)
+    let response
+    if (type === 'signup') response = await window.api.signUp(userInfo)
+    else if (type === 'login')
+      response = await window.api.logIn({ email: userInfo.email, password: userInfo.password })
 
-    try {
-      setLoading(true)
-      const response = await window.api.addUser(userData)
-      console.log(response)
-
+    if (response.success) {
       setUserInfo(USER_INFO)
-      notify()
-
-      return response
-    } catch (error) {
-      console.error('Unexpected error:', error)
-      return null
-    } finally {
-      setLoading(false)
+      notify(response.success, response.message)
+      navigate('/')
     }
+    if (!response.success) {
+      setError(response.data)
+      notify(response.success, response.data)
+    }
+
+    setLoading(false)
   }
 
   const isLoggingIn = type === 'login'
 
   const title = isLoggingIn ? 'Log In' : 'Sign Up'
 
-  const notify = (): void => {
-    toast.success('Signed up successfully!')
+  const notify = (success: boolean, message: any): void => {
+    if (success) toast.success(message)
+    else
+      message.forEach((err) => {
+        toast.error(err.msg)
+      })
   }
 
   return (
@@ -72,15 +82,16 @@ const AuthForm: React.FC<{ type: string }> = ({ type }) => {
       <div className="flex items-center gap-2 self-center">
         <img className="w-8 h-8" src={Logo} alt="A display of an electron" />
         <p className="font-semibold font-mono">
-          <span className="text-zinc-400">Select</span>ron
+          <span className="text-purple-500">Select</span>
+          <span className="text-purple-400">ron</span>
         </p>
       </div>
       <div className="flex items-center flex-col text-center my-4">
-        <h1 className="font-serif text-3xl">{isLoggingIn ? 'Welcome Back' : 'Hello There'}</h1>
+        <h1 className="font-serif text-3xl">{isLoggingIn ? 'Welcome Back!' : 'Hello There!'}</h1>
         <p className="text-sm text-gray-300">
           {isLoggingIn
             ? 'Enter your email and password to your account'
-            : 'Create an account for free'}
+            : 'Create an account and start your journey!'}
         </p>
       </div>
       <TextField
@@ -90,12 +101,13 @@ const AuthForm: React.FC<{ type: string }> = ({ type }) => {
         label="Email"
         variant="outlined"
         type="email"
+        onFocus={() => setError([])}
+        error={error.some((err) => err?.path === 'email')}
+        helperText={error.find((err) => err?.path === 'email')?.msg}
         sx={{
           input: { color: 'white' },
           '& label': { color: 'white' },
-          // Override the label color when focused
           '& label.Mui-focused': { color: 'white' },
-          // Override the border colors in various states
           '& .MuiOutlinedInput-root': {
             '& fieldset': {
               borderColor: 'white'
@@ -110,30 +122,35 @@ const AuthForm: React.FC<{ type: string }> = ({ type }) => {
         }}
       />
 
-      <TextField
-        value={userInfo.username}
-        onChange={(e) => setUserInfo({ ...userInfo, username: e.target.value })}
-        id="outlined-basic"
-        label="Username"
-        variant="outlined"
-        type="text"
-        sx={{
-          input: { color: 'white' },
-          '& label': { color: 'white' },
-          '& label.Mui-focused': { color: 'white' },
-          '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-              borderColor: 'white'
-            },
-            '&:hover fieldset': {
-              borderColor: 'white'
-            },
-            '&.Mui-focused fieldset': {
-              borderColor: 'white'
+      {type === 'signup' && (
+        <TextField
+          value={userInfo.username}
+          onChange={(e) => setUserInfo({ ...userInfo, username: e.target.value })}
+          id="outlined-basic"
+          label="Username"
+          variant="outlined"
+          type="text"
+          onFocus={() => setError([])}
+          error={error.some((err) => err?.path === 'username')}
+          helperText={error.find((err) => err?.path === 'username')?.msg}
+          sx={{
+            input: { color: 'white' },
+            '& label': { color: 'white' },
+            '& label.Mui-focused': { color: 'white' },
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': {
+                borderColor: 'white'
+              },
+              '&:hover fieldset': {
+                borderColor: 'white'
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: 'white'
+              }
             }
-          }
-        }}
-      />
+          }}
+        />
+      )}
 
       <FormControl
         variant="outlined"
@@ -158,10 +175,13 @@ const AuthForm: React.FC<{ type: string }> = ({ type }) => {
           Password
         </InputLabel>
         <OutlinedInput
+          value={userInfo.password}
           onChange={(e) => setUserInfo({ ...userInfo, password: e.target.value })}
           id="outlined-adornment-password"
           type={showPassword ? 'text' : 'password'}
+          error={error.some((err) => err?.path === 'password')}
           label="Password"
+          onFocus={() => setError([])}
           sx={{
             input: { color: 'white' }
           }}
@@ -180,6 +200,9 @@ const AuthForm: React.FC<{ type: string }> = ({ type }) => {
             </InputAdornment>
           }
         />
+        <FormHelperText error={error.some((err) => err?.path === 'password')}>
+          {error.find((err) => err?.path === 'password')?.msg}
+        </FormHelperText>
       </FormControl>
 
       <Button
@@ -187,11 +210,12 @@ const AuthForm: React.FC<{ type: string }> = ({ type }) => {
         sx={{
           textTransform: 'none',
           height: '50px',
-          backgroundColor: '#000',
+          bgcolor: 'purple.700',
           borderRadius: '5px'
         }}
         onClick={handleAddUser}
         variant="contained"
+        color="secondary"
       >
         {loading ? <BeatLoader color="white" size={5} /> : title}
       </Button>
@@ -200,7 +224,7 @@ const AuthForm: React.FC<{ type: string }> = ({ type }) => {
           <>
             Don{"'"}t have an account?{' '}
             <NavLink
-              className="font-semibold hover:underline transition-all cursor-pointer"
+              className="font-semibold hover:underline transition-all cursor-pointer text-purple-400 hover:text-purple-500"
               to="/signup"
             >
               Create one!
@@ -210,7 +234,7 @@ const AuthForm: React.FC<{ type: string }> = ({ type }) => {
           <>
             Already have an account?{' '}
             <NavLink
-              className="font-semibold hover:underline transition-all cursor-pointer"
+              className="font-semibold hover:underline transition-all cursor-pointer text-purple-400 hover:text-purple-500"
               to="/login"
             >
               Log in now!
