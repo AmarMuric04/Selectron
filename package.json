@@ -32,6 +32,7 @@
     "@radix-ui/react-checkbox": "^1.1.4",
     "@reduxjs/toolkit": "^2.6.0",
     "@tailwindcss/vite": "^4.0.10",
+    "@tanstack/react-query": "^5.67.2",
     "@types/tailwindcss": "^3.0.11",
     "axios": "^1.8.2",
     "bcryptjs": "^3.0.2",
@@ -51,7 +52,8 @@
     "react-spinners": "^0.15.0",
     "react-toastify": "^11.0.5",
     "react-use": "^17.6.0",
-    "tailwind-variants": "^0.3.1"
+    "tailwind-variants": "^0.3.1",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "^3.0.0",

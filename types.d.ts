@@ -8,6 +8,7 @@ type User = {
 
 type Todo = {
   todo: string
+  user: string
 }
 
 type Todos = {

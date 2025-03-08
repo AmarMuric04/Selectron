@@ -7,10 +7,10 @@ import AddTodo from './AddTodo'
 
 const TodoItem: React.FC<{
   completed: boolean
-  text: string
-}> = ({ completed, text }) => {
+  todo: string
+}> = ({ completed, todo }) => {
   const [isEditing, setIsEditing] = useState(false)
-  const [value, setValue] = useState(text)
+  const [value, setValue] = useState(todo.todo)
   const dispatch = useDispatch()
   const { newTodosValue } = useSelector((state) => state.todo)
 
@@ -34,8 +34,8 @@ const TodoItem: React.FC<{
               className="cursor-pointer"
               onClick={() => {
                 if (completed) {
-                  dispatch(setUncompleted(text))
-                } else dispatch(setCompleted(text))
+                  dispatch(setUncompleted({ ...todo, todo: value }))
+                } else dispatch(setCompleted({ ...todo, todo: value }))
               }}
             >
               {completed ? (

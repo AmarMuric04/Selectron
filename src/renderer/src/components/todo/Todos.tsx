@@ -4,26 +4,39 @@ import { RiCheckboxBlankLine } from 'react-icons/ri'
 import { IoCheckboxOutline } from 'react-icons/io5'
 import TodoItem from './TodoItem'
 import AddTodo from './AddTodo'
-import { addTodo, setIsCreating, setNewTodosValue } from '@renderer/store/todoSlice'
+import { addTodo, setIsCreating, setNewTodosValue, setTodos } from '@renderer/store/todoSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { ToastContainer, toast } from 'react-toastify'
+import { FaRegHourglassHalf } from 'react-icons/fa6'
 
 const Todos: React.FC = () => {
   const [showCompleted, setShowCompleted] = useState(false)
+  const [gettingTodos, setGettingTodos] = useState(true)
 
   const dispatch = useDispatch()
   const { isCreating, todos, newTodosValue } = useSelector((state) => state.todo)
   const { user } = useSelector((state) => state.user)
 
+  console.log(todos)
+
   const notify = (text: string): void => {
-    toast.success(text, { toastId: 'login-toast' })
+    toast.success(text)
   }
 
   useEffect(() => {
     if (!user) return
 
-    toast.dismiss()
-    notify('Successfully logged in as: ' + user.username)
+    const getTodos = async () => {
+      const todos = await window.api?.getTodos()
+
+      console.log(todos.data)
+
+      dispatch(setTodos(todos.data))
+    }
+
+    getTodos()
+    setGettingTodos(false)
+    // notify('Successfully logged in as: ' + user.username)
   }, [user])
 
   return (
@@ -50,55 +63,63 @@ const Todos: React.FC = () => {
         </button>
       </header>
 
-      {!showCompleted && (
-        <ul className="text-zinc-500 flex flex-col gap-2 mb-4">
-          {todos.uncompleted.map((t, index) => (
-            <TodoItem text={t} completed={false} key={index} />
-          ))}
-        </ul>
+      {gettingTodos && (
+        <FaRegHourglassHalf className="throb text-zinc-700 self-center my-auto" size={40} />
       )}
+      {!gettingTodos && (
+        <>
+          {!showCompleted && (
+            <ul className="text-zinc-500 flex flex-col gap-2 mb-4">
+              {todos.uncompleted.map((t, index) => (
+                <TodoItem todo={t} completed={false} key={t._id} />
+              ))}
+            </ul>
+          )}
 
-      {showCompleted && todos.completed.length > 0 && (
-        <ul className="text-zinc-500 flex flex-col gap-2 mb-4">
-          {todos.completed.map((t, index) => (
-            <TodoItem text={t} completed={true} key={index} />
-          ))}
-        </ul>
-      )}
+          {showCompleted && todos.completed.length > 0 && (
+            <ul className="text-zinc-500 flex flex-col gap-2 mb-4">
+              {todos.completed.map((t, index) => (
+                <TodoItem todo={t} completed={true} key={t._id} />
+              ))}
+            </ul>
+          )}
 
-      {!showCompleted && !isCreating && todos.uncompleted.length > 0 && (
-        <button
-          onClick={() => dispatch(setIsCreating(true))}
-          className="mx-4 text-zinc-700 text-sm py-1 border-dashed border-1 border-zinc-700 rounded-lg mt-4 hover:border-zinc-600 hover:text-zinc-600 transition-all cursor-pointer"
-        >
-          + Add new todo
-        </button>
-      )}
+          {!showCompleted && !isCreating && todos.uncompleted.length > 0 && (
+            <button
+              onClick={() => dispatch(setIsCreating(true))}
+              className="mx-4 text-zinc-700 text-sm py-1 border-dashed border-1 border-zinc-700 rounded-lg mt-4 hover:border-zinc-600 hover:text-zinc-600 transition-all cursor-pointer"
+            >
+              + Add new todo
+            </button>
+          )}
 
-      {isCreating && (
-        <AddTodo
-          onSave={() => {
-            if (newTodosValue.trim()) {
-              dispatch(addTodo(newTodosValue.trim()))
-              dispatch(setNewTodosValue(''))
-              dispatch(setIsCreating(false))
-            }
-          }}
-          onCancel={() => dispatch(setIsCreating(false))}
-        />
-      )}
+          {isCreating && (
+            <AddTodo
+              onSave={() => {
+                if (newTodosValue.trim()) {
+                  window.api?.addTodo(newTodosValue)
+                  dispatch(addTodo(newTodosValue.trim()))
+                  dispatch(setNewTodosValue(''))
+                  dispatch(setIsCreating(false))
+                }
+              }}
+              onCancel={() => dispatch(setIsCreating(false))}
+            />
+          )}
 
-      {!isCreating && !showCompleted && todos.uncompleted.length === 0 && (
-        <div className="px-4 flex-1 w-full flex items-center justify-center text-zinc-800 flex-col gap-2">
-          <IoMdCheckboxOutline size={60} />
-          <p className="font-semibold">You don{"'"}t have any todos</p>
-          <button
-            onClick={() => dispatch(setIsCreating(true))}
-            className="underline text-zinc-600 hover:text-zinc-500 font-semibold transition-all cursor-pointer"
-          >
-            Add a new todo
-          </button>
-        </div>
+          {!isCreating && !showCompleted && todos.uncompleted.length === 0 && (
+            <div className="px-4 flex-1 w-full flex items-center justify-center text-zinc-800 flex-col gap-2">
+              <IoMdCheckboxOutline size={60} />
+              <p className="font-semibold">You don{"'"}t have any todos</p>
+              <button
+                onClick={() => dispatch(setIsCreating(true))}
+                className="underline text-zinc-600 hover:text-zinc-500 font-semibold transition-all cursor-pointer"
+              >
+                Add a new todo
+              </button>
+            </div>
+          )}
+        </>
       )}
     </section>
   )

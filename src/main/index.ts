@@ -14,6 +14,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 import './backend/server.js'
+import { addTodoHandler, getTodosHandler } from './handlers/todoHandler'
 
 function createWindow(): void {
   const mainWindow = new BrowserWindow({
@@ -71,6 +72,8 @@ app.on('window-all-closed', () => {
   }
 })
 
+/* User handlers */
+
 ipcMain.handle('add-user', signUpHandler)
 
 ipcMain.handle('log-in', logInHandler)
@@ -80,6 +83,14 @@ ipcMain.handle('auto-sign-in', autoSignIn)
 ipcMain.handle('get-users', getUsersHandler)
 
 ipcMain.on('log-out', logOutHandler)
+
+/* Todo handlers */
+
+ipcMain.handle('add-todo', addTodoHandler)
+
+ipcMain.handle('get-todos', getTodosHandler)
+
+/* General handlers */
 
 ipcMain.on('frame-interaction', (event, option: string) => {
   console.log('Frame interaction option:', option)

@@ -7,10 +7,6 @@ import { jwtDecode } from 'jwt-decode'
 dotenv.config()
 const port = process.env.SERVER_PORT || 'http://localhost:5000'
 
-// Type definition for AddUserType should be defined/imported appropriately
-// import { AddUserType } from './types'
-
-// Using a unified service name "Selectron" for storing credentials
 async function storeAuthCredentials(token: string, userId: string): Promise<void> {
   await keytar.setPassword('Selectron', 'token', token)
   await keytar.setPassword('Selectron', 'userId', userId)
@@ -31,7 +27,7 @@ async function clearAuthCredentials(): Promise<void> {
 }
 
 async function signUserIn(userId: string, token: string): any {
-  // console.log(`User ${userId} signed in successfully with token: ${token}`)
+  console.log(`User ${userId} signed in successfully with token: ${token}`)
 
   try {
     const response = await axios.post(`${port}/user/auto-sign-in`, { userId })
@@ -48,7 +44,6 @@ function promptUserToLogIn(): void {
 
 export async function autoSignIn(): Promise<any> {
   const { token, userId } = await getAuthCredentials()
-  // console.log(token, userId)
 
   if (token && userId) {
     try {
@@ -108,7 +103,6 @@ export async function logInHandler(
 ): Promise<any | { success: boolean; message: string } | null> {
   try {
     const { email, password } = userData
-    const port = process.env.SERVER_PORT || 'http://localhost:5000'
 
     const response = await axios.post(`${port}/user/login`, {
       email,

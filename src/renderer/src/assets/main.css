@@ -7,3 +7,16 @@
 #frame button {
   -webkit-app-region: no-drag;
 }
+
+@keyframes throbber {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.throb {
+  animation: throbber 1.5s linear infinite;
+}
