@@ -8,7 +8,8 @@ const api = {
   getUsers: async (): Promise<User[]> => ipcRenderer.invoke('get-users'),
   addTodo: async (todo: string): Promise<Todo> => ipcRenderer.invoke('add-todo', todo),
   getTodos: async (): Promise<Todo[]> => ipcRenderer.invoke('get-todos'),
-  autoSignIn: async (): Promise<void> => ipcRenderer.invoke('auto-sign-in')
+  autoSignIn: async (): Promise<void> => ipcRenderer.invoke('auto-sign-in'),
+  logOut: async (): Promise<void> => ipcRenderer.send('log-out')
 }
 
 const extendedElectronAPI = {

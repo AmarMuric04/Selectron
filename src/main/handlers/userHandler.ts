@@ -127,6 +127,11 @@ export async function logInHandler(
   }
 }
 
+export async function logOutHandler(): Promise<void> {
+  console.log("User's credentials are in the process of being removed.")
+  await clearAuthCredentials()
+}
+
 export async function getUsersHandler(): Promise<User[] | null> {
   try {
     const users = await User.find().lean()

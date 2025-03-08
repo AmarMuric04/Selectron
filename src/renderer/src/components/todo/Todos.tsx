@@ -16,12 +16,13 @@ const Todos: React.FC = () => {
   const { user } = useSelector((state) => state.user)
 
   const notify = (text: string): void => {
-    toast.success(text)
+    toast.success(text, { toastId: 'login-toast' })
   }
 
   useEffect(() => {
     if (!user) return
 
+    toast.dismiss()
     notify('Successfully logged in as: ' + user.username)
   }, [user])
 

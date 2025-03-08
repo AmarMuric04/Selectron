@@ -2,7 +2,13 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import { signUpHandler, getUsersHandler, logInHandler, autoSignIn } from './handlers/userHandler'
+import {
+  signUpHandler,
+  getUsersHandler,
+  logInHandler,
+  autoSignIn,
+  logOutHandler
+} from './handlers/userHandler'
 
 import dotenv from 'dotenv'
 dotenv.config()
@@ -72,6 +78,8 @@ ipcMain.handle('log-in', logInHandler)
 ipcMain.handle('auto-sign-in', autoSignIn)
 
 ipcMain.handle('get-users', getUsersHandler)
+
+ipcMain.on('log-out', logOutHandler)
 
 ipcMain.on('frame-interaction', (event, option: string) => {
   console.log('Frame interaction option:', option)

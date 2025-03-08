@@ -55,6 +55,7 @@ const AuthForm: React.FC<{ type: string }> = ({ type }) => {
       response = await window.api.logIn({ email: userInfo.email, password: userInfo.password })
 
     if (response.success) {
+      toast.dismiss()
       setUserInfo(USER_INFO)
       notify(response.success, response.message)
       dispatch(setUser(response.data.user))
