@@ -1,5 +1,6 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
+import { autoSignIn } from '../main/handlers/userHandler'
 
 const api = {
   signUp: async (userData: User): Promise<AddUserType> => ipcRenderer.invoke('add-user', userData),
@@ -7,7 +8,8 @@ const api = {
     ipcRenderer.invoke('log-in', userData),
   getUsers: async (): Promise<User[]> => ipcRenderer.invoke('get-users'),
   addTodo: async (todo: string): Promise<Todo> => ipcRenderer.invoke('add-todo', todo),
-  getTodos: async (): Promise<Todo[]> => ipcRenderer.invoke('get-todos')
+  getTodos: async (): Promise<Todo[]> => ipcRenderer.invoke('get-todos'),
+  autoSignIn: async (): Promise<void> => ipcRenderer.invoke('auto-sign-in')
 }
 
 if (process.contextIsolated) {

@@ -9,6 +9,7 @@ declare global {
       getUsers: () => Promise<User[]>
       addTodo: (todo: string) => Promise<Todo>
       getTodos: () => Promise<Todo[]>
+      autoSignIn: () => Promise<void>
     }
   }
 }

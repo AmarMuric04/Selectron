@@ -87,3 +87,21 @@ export const logIn = async (req, res, next) => {
     next(err)
   }
 }
+export const autoLogIn = async (req, res, next) => {
+  try {
+    const { userId } = req.body
+
+    const user = await User.findById(userId)
+
+    if (!user) {
+      const error = new Error('No user found with that id...')
+      error.statusCode = 404
+
+      throw error
+    }
+
+    res.status(200).json({ message: 'Successfully auto signed in!', data: user })
+  } catch (err) {
+    next(err)
+  }
+}

@@ -3,12 +3,14 @@ type User = {
   username: string
   email: string
   password: string
+  todos?: Todos
 }
 
-type Todo = string
+type Todo = {
+  todo: string
+}
 
 type Todos = {
-  creator: string
   uncompleted: Todo[]
   completed: Todo[]
 }

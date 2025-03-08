@@ -26,4 +26,6 @@ router.post(
   UserController.signUp
 )
 
+router.post('/auto-sign-in', UserController.autoLogIn)
+
 export default router

@@ -1,8 +1,7 @@
 import mongoose, { Schema, Model } from 'mongoose'
 
 const todoSchema: Schema<Todo> = new Schema({
-  uncompleted: [{ type: String }],
-  completed: [{ type: String }]
+  todo: String
 })
 
 const Todo: Model<Todo> = mongoose.model<Todo>('Todo', todoSchema)

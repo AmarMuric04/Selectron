@@ -2,46 +2,83 @@ import { IpcMainInvokeEvent } from 'electron'
 import User from '../database/models/User'
 import axios from 'axios'
 import dotenv from 'dotenv'
+import keytar from 'keytar'
+import { jwtDecode } from 'jwt-decode'
 dotenv.config()
+const port = process.env.SERVER_PORT || 'http://localhost:5000'
 
-// const userDataPath = app.getPath('userData')
-// const storagePath = path.join(userDataPath, 'user-data.json')
+// Type definition for AddUserType should be defined/imported appropriately
+// import { AddUserType } from './types'
 
-// function saveUserData(user: AddUserType): void {
-//   const encryptedToken = safeStorage.encryptString(user.token)
-//   const encryptedExpiry = safeStorage.encryptString(user.expiry.toString())
+// Using a unified service name "Selectron" for storing credentials
+async function storeAuthCredentials(token: string, userId: string): Promise<void> {
+  await keytar.setPassword('Selectron', 'token', token)
+  await keytar.setPassword('Selectron', 'userId', userId)
+}
 
-//   const data = {
-//     id: user._id,
-//     token: encryptedToken.toString('base64'),
-//     expiry: encryptedExpiry.toString('base64')
-//   }
+export async function getAuthCredentials(): Promise<{
+  token: string | null
+  userId: string | null
+}> {
+  const token = await keytar.getPassword('Selectron', 'token')
+  const userId = await keytar.getPassword('Selectron', 'userId')
+  return { token, userId }
+}
 
-//   fs.writeFileSync(storagePath, JSON.stringify(data), 'utf-8')
-// }
+async function clearAuthCredentials(): Promise<void> {
+  await keytar.deletePassword('Selectron', 'token')
+  await keytar.deletePassword('Selectron', 'userId')
+}
 
-// function getUserData() {
-//   if (!fs.existsSync(storagePath)) return null
+async function signUserIn(userId: string, token: string): any {
+  // console.log(`User ${userId} signed in successfully with token: ${token}`)
 
-//   const data = JSON.parse(fs.readFileSync(storagePath, 'utf-8'))
+  try {
+    const response = await axios.post(`${port}/user/auto-sign-in`, { userId })
 
-//   const decryptedToken = safeStorage.decryptString(Buffer.from(data.token, 'base64'))
-//   const decryptedExpiry = safeStorage.decryptString(Buffer.from(data.expiry, 'base64'))
+    return response.data.data
+  } catch (error: any) {
+    return error.response.data
+  }
+}
 
-//   return {
-//     id: data.id,
-//     token: decryptedToken,
-//     expiry: parseInt(decryptedExpiry, 10)
-//   }
-// }
+function promptUserToLogIn(): void {
+  console.log('No valid credentials found or token expired. Prompting user to log in.')
+}
+
+export async function autoSignIn(): Promise<any> {
+  const { token, userId } = await getAuthCredentials()
+  console.log(token, userId)
+
+  if (token && userId) {
+    try {
+      const decoded: any = jwtDecode(token)
+      if (decoded?.exp * 1000 > Date.now()) {
+        const user = await signUserIn(userId, token)
+
+        return user
+      } else {
+        // await clearAuthCredentials()
+        promptUserToLogIn()
+        return null
+      }
+    } catch (error) {
+      // await clearAuthCredentials()
+      promptUserToLogIn()
+      return null
+    }
+  } else {
+    promptUserToLogIn()
+    return { user: null }
+  }
+}
 
 export async function signUpHandler(
   _event: IpcMainInvokeEvent,
   userData: User
-): Promise<AddUserType | { success: boolean; message: string } | null> {
+): Promise<any | { success: boolean; message: string } | null> {
   try {
     const { password, email, username } = userData
-    const port = process.env.SERVER_PORT || 'http://localhost:5000'
 
     const response = await axios.post(`${port}/user/signup`, {
       username,
@@ -49,7 +86,13 @@ export async function signUpHandler(
       password
     })
 
-    return response.data as AddUserType
+    const data = response.data as any /* AddUserType */
+    const token = data.data.token
+    const userId = data.data.user._id
+
+    await storeAuthCredentials(token, userId)
+
+    return data
   } catch (error: any) {
     return error.response.data
   }
@@ -61,9 +104,9 @@ export async function logInHandler(
     email: string
     password: string
   }
-): Promise<AddUserType | { success: boolean; message: string } | null> {
+): Promise<any | { success: boolean; message: string } | null> {
   try {
-    const { password, email } = userData
+    const { email, password } = userData
     const port = process.env.SERVER_PORT || 'http://localhost:5000'
 
     const response = await axios.post(`${port}/user/login`, {
@@ -71,7 +114,13 @@ export async function logInHandler(
       password
     })
 
-    return response.data as AddUserType
+    const data = response.data as any
+    const token = data.data.token
+    const userId = data.data.user._id.toString()
+
+    await storeAuthCredentials(token, userId)
+
+    return data
   } catch (error: any) {
     return error.response.data
   }
