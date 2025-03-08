@@ -100,7 +100,15 @@ export const autoLogIn = async (req, res, next) => {
       throw error
     }
 
-    res.status(200).json({ message: 'Successfully auto signed in!', data: user })
+    const returnedUser = {
+      _id: user._id,
+      username: user.username
+    }
+
+    res.status(200).json({
+      message: 'Successfully auto signed in!',
+      data: returnedUser
+    })
   } catch (err) {
     next(err)
   }

@@ -3,3 +3,7 @@
 #frame {
   -webkit-app-region: drag;
 }
+
+#frame button {
+  -webkit-app-region: no-drag;
+}

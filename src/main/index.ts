@@ -72,3 +72,27 @@ ipcMain.handle('log-in', logInHandler)
 ipcMain.handle('auto-sign-in', autoSignIn)
 
 ipcMain.handle('get-users', getUsersHandler)
+
+ipcMain.on('frame-interaction', (event, option: string) => {
+  console.log('Frame interaction option:', option)
+  const win = BrowserWindow.getFocusedWindow()
+  if (win) {
+    switch (option) {
+      case 'minimize':
+        win.minimize()
+        break
+      case 'maximize':
+        if (win.isMaximized()) {
+          win.unmaximize()
+        } else {
+          win.maximize()
+        }
+        break
+      case 'close':
+        win.close()
+        break
+      default:
+        console.warn('Unknown frame interaction option:', option)
+    }
+  }
+})

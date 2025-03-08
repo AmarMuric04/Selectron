@@ -1,6 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
-import { autoSignIn } from '../main/handlers/userHandler'
 
 const api = {
   signUp: async (userData: User): Promise<AddUserType> => ipcRenderer.invoke('add-user', userData),
@@ -12,16 +11,21 @@ const api = {
   autoSignIn: async (): Promise<void> => ipcRenderer.invoke('auto-sign-in')
 }
 
+const extendedElectronAPI = {
+  ...electronAPI,
+  frameInteraction: (option: string): void => ipcRenderer.send('frame-interaction', option)
+}
+
 if (process.contextIsolated) {
   try {
-    contextBridge.exposeInMainWorld('electron', electronAPI)
+    contextBridge.exposeInMainWorld('electron', extendedElectronAPI)
     contextBridge.exposeInMainWorld('api', api)
   } catch (error) {
     console.error(error)
   }
 } else {
   // @ts-ignore (define in dts)
-  window.electron = electronAPI
+  window.electron = extendedElectronAPI
   // @ts-ignore (define in dts)
   window.api = api
 }

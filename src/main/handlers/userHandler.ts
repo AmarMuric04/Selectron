@@ -48,28 +48,29 @@ function promptUserToLogIn(): void {
 
 export async function autoSignIn(): Promise<any> {
   const { token, userId } = await getAuthCredentials()
-  console.log(token, userId)
+  // console.log(token, userId)
 
   if (token && userId) {
     try {
       const decoded: any = jwtDecode(token)
       if (decoded?.exp * 1000 > Date.now()) {
+        console.log(new Date(decoded?.exp * 1000))
         const user = await signUserIn(userId, token)
 
         return user
       } else {
-        // await clearAuthCredentials()
+        await clearAuthCredentials()
         promptUserToLogIn()
         return null
       }
     } catch (error) {
-      // await clearAuthCredentials()
+      await clearAuthCredentials()
       promptUserToLogIn()
       return null
     }
   } else {
     promptUserToLogIn()
-    return { user: null }
+    return null
   }
 }
 

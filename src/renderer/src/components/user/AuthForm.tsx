@@ -16,6 +16,8 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import { BeatLoader } from 'react-spinners'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { setUser } from '@renderer/store/userSlice'
+import { useDispatch } from 'react-redux'
 
 const USER_INFO = { username: '', email: '', password: '' }
 
@@ -25,6 +27,7 @@ const AuthForm: React.FC<{ type: string }> = ({ type }) => {
   const [error, setError] = useState<any>([])
 
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const [showPassword, setShowPassword] = React.useState(false)
 
@@ -54,6 +57,7 @@ const AuthForm: React.FC<{ type: string }> = ({ type }) => {
     if (response.success) {
       setUserInfo(USER_INFO)
       notify(response.success, response.message)
+      dispatch(setUser(response.data.user))
       navigate('/todos')
     }
     if (!response.success) {

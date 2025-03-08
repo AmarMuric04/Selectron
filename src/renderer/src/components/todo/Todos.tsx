@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { IoMdCheckboxOutline } from 'react-icons/io'
 import { RiCheckboxBlankLine } from 'react-icons/ri'
 import { IoCheckboxOutline } from 'react-icons/io5'
@@ -6,15 +6,28 @@ import TodoItem from './TodoItem'
 import AddTodo from './AddTodo'
 import { addTodo, setIsCreating, setNewTodosValue } from '@renderer/store/todoSlice'
 import { useDispatch, useSelector } from 'react-redux'
+import { ToastContainer, toast } from 'react-toastify'
 
 const Todos: React.FC = () => {
   const [showCompleted, setShowCompleted] = useState(false)
 
   const dispatch = useDispatch()
   const { isCreating, todos, newTodosValue } = useSelector((state) => state.todo)
+  const { user } = useSelector((state) => state.user)
+
+  const notify = (text: string): void => {
+    toast.success(text)
+  }
+
+  useEffect(() => {
+    if (!user) return
+
+    notify('Successfully logged in as: ' + user.username)
+  }, [user])
 
   return (
     <section className="w-1/4 min-w-[20rem] h-full bg-zinc-900 rounded-2xl flex flex-col">
+      <ToastContainer />
       <header className="flex gap-2 items-center text-zinc-700 p-4 text-sm">
         <button
           onClick={() => setShowCompleted(false)}
