@@ -6,8 +6,8 @@ const userSchema: Schema<User> = new Schema(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     todos: {
-      uncompleted: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Todo' }],
-      completed: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Todo' }]
+      uncompleted: [{ type: String, ref: 'Todo' }],
+      completed: [{ type: String, ref: 'Todo' }]
     }
   },
   { timestamps: true }

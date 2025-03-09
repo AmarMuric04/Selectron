@@ -9,7 +9,13 @@ const api = {
   addTodo: async (todo: string): Promise<Todo> => ipcRenderer.invoke('add-todo', todo),
   getTodos: async (): Promise<Todo[]> => ipcRenderer.invoke('get-todos'),
   autoSignIn: async (): Promise<void> => ipcRenderer.invoke('auto-sign-in'),
-  logOut: async (): Promise<void> => ipcRenderer.send('log-out')
+  logOut: async (): Promise<void> => ipcRenderer.send('log-out'),
+  completeTodo: async (todo: string): Promise<void> => ipcRenderer.invoke('complete-todo', todo),
+  uncompleteTodo: async (todo: string): Promise<void> =>
+    ipcRenderer.invoke('uncomplete-todo', todo),
+  deleteTodo: async (todo: string): Promise<void> => ipcRenderer.send('delete-todo', todo),
+  editTodo: async (todo: string, newTodo: string): Promise<Todo> =>
+    ipcRenderer.invoke('edit-todo', todo, newTodo)
 }
 
 const extendedElectronAPI = {

@@ -8,6 +8,7 @@ import { addTodo, setIsCreating, setNewTodosValue, setTodos } from '@renderer/st
 import { useDispatch, useSelector } from 'react-redux'
 import { ToastContainer, toast } from 'react-toastify'
 import { FaRegHourglassHalf } from 'react-icons/fa6'
+import KeyboardButton from '../KeyboardButton'
 
 const Todos: React.FC = () => {
   const [showCompleted, setShowCompleted] = useState(false)
@@ -24,6 +25,10 @@ const Todos: React.FC = () => {
   }
 
   useEffect(() => {
+    if (showCompleted) dispatch(setIsCreating(false))
+  }, [showCompleted])
+
+  useEffect(() => {
     if (!user) return
 
     const getTodos = async () => {
@@ -37,7 +42,25 @@ const Todos: React.FC = () => {
     getTodos()
     setGettingTodos(false)
     // notify('Successfully logged in as: ' + user.username)
-  }, [user])
+  }, [user, dispatch])
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') {
+        setShowCompleted(false)
+      } else if (e.key === 'ArrowRight') {
+        setShowCompleted(true)
+      } else if (e.key === 'a' || e.key === 'A') {
+        if (!isCreating) {
+          e.preventDefault()
+          dispatch(setIsCreating(true))
+        }
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [dispatch, isCreating])
 
   return (
     <section className="w-1/4 min-w-[20rem] h-full bg-zinc-900 rounded-2xl flex flex-col">
@@ -66,30 +89,26 @@ const Todos: React.FC = () => {
       {gettingTodos && (
         <FaRegHourglassHalf className="throb text-zinc-700 self-center my-auto" size={40} />
       )}
-      {!gettingTodos && (
+      {(!gettingTodos || !todos) && (
         <>
           {!showCompleted && (
             <ul className="text-zinc-500 flex flex-col gap-2 mb-4">
-              {todos.uncompleted.map((t, index) => (
-                <TodoItem todo={t} completed={false} key={t._id} />
-              ))}
+              {todos?.uncompleted.map((t) => <TodoItem todo={t} completed={false} key={t._id} />)}
             </ul>
           )}
 
-          {showCompleted && todos.completed.length > 0 && (
+          {showCompleted && todos?.completed.length > 0 && (
             <ul className="text-zinc-500 flex flex-col gap-2 mb-4">
-              {todos.completed.map((t, index) => (
-                <TodoItem todo={t} completed={true} key={t._id} />
-              ))}
+              {todos?.completed.map((t) => <TodoItem todo={t} completed={true} key={t._id} />)}
             </ul>
           )}
 
-          {!showCompleted && !isCreating && todos.uncompleted.length > 0 && (
+          {!showCompleted && !isCreating && todos?.uncompleted.length > 0 && (
             <button
               onClick={() => dispatch(setIsCreating(true))}
-              className="mx-4 text-zinc-700 text-sm py-1 border-dashed border-1 border-zinc-700 rounded-lg mt-4 hover:border-zinc-600 hover:text-zinc-600 transition-all cursor-pointer"
+              className="mx-4 text-zinc-700 text-sm py-1 border-dashed border-1 border-zinc-700 rounded-lg mt-4 hover:border-zinc-600 hover:text-zinc-600 transition-all cursor-pointer flex items-center gap-2 justify-center"
             >
-              + Add new todo
+              <KeyboardButton>a / A</KeyboardButton>+ Add new todo
             </button>
           )}
 
@@ -103,11 +122,14 @@ const Todos: React.FC = () => {
                   dispatch(setIsCreating(false))
                 }
               }}
-              onCancel={() => dispatch(setIsCreating(false))}
+              onCancel={() => {
+                dispatch(setIsCreating(false))
+                dispatch(setNewTodosValue(''))
+              }}
             />
           )}
 
-          {!isCreating && !showCompleted && todos.uncompleted.length === 0 && (
+          {!isCreating && !showCompleted && todos?.uncompleted.length === 0 && (
             <div className="px-4 flex-1 w-full flex items-center justify-center text-zinc-800 flex-col gap-2">
               <IoMdCheckboxOutline size={60} />
               <p className="font-semibold">You don{"'"}t have any todos</p>

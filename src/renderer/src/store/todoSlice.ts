@@ -39,11 +39,27 @@ const todoSlice = createSlice({
     setUncompleted: (state, action: PayloadAction<string>) => {
       state.todos.uncompleted.push(action.payload)
       state.todos.completed = state.todos.completed.filter((e) => e._id !== action.payload._id)
+    },
+    deleteTodo: (state, action: PayloadAction<string>) => {
+      const todoId = action.payload
+
+      if (state.todos.uncompleted.some((t) => t._id.toString() === todoId)) {
+        state.todos.uncompleted = state.todos.uncompleted.filter((t) => t._id.toString() !== todoId)
+      } else if (state.todos.completed.some((t) => t._id.toString() === todoId)) {
+        state.todos.completed = state.todos.completed.filter((t) => t._id.toString() !== todoId)
+      }
     }
   }
 })
 
-export const { addTodo, setIsCreating, setNewTodosValue, setCompleted, setUncompleted, setTodos } =
-  todoSlice.actions
+export const {
+  addTodo,
+  setIsCreating,
+  setNewTodosValue,
+  setCompleted,
+  setUncompleted,
+  setTodos,
+  deleteTodo
+} = todoSlice.actions
 
 export default todoSlice.reducer

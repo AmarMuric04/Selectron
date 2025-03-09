@@ -13,6 +13,10 @@ declare global {
       getTodos: () => Promise<Todo[]>
       autoSignIn: () => Promise<void>
       logOut: () => Promise<void>
+      completeTodo: (todo: string) => Promise<void>
+      uncompleteTodo: (todo: string) => Promise<void>
+      deleteTodo: (todo: string) => Promise<void>
+      editTodo: (todo: string, newTodo: string) => Promise<Todo>
     }
   }
 }

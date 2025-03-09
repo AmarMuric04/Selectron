@@ -14,7 +14,14 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 import './backend/server.js'
-import { addTodoHandler, getTodosHandler } from './handlers/todoHandler'
+import {
+  addTodoHandler,
+  completeTodoHandler,
+  deleteTodoHandler,
+  editTodoHandler,
+  getTodosHandler,
+  uncompleteTodoHandler
+} from './handlers/todoHandler'
 
 function createWindow(): void {
   const mainWindow = new BrowserWindow({
@@ -89,6 +96,14 @@ ipcMain.on('log-out', logOutHandler)
 ipcMain.handle('add-todo', addTodoHandler)
 
 ipcMain.handle('get-todos', getTodosHandler)
+
+ipcMain.handle('complete-todo', completeTodoHandler)
+
+ipcMain.handle('uncomplete-todo', uncompleteTodoHandler)
+
+ipcMain.on('delete-todo', deleteTodoHandler)
+
+ipcMain.handle('edit-todo', editTodoHandler)
 
 /* General handlers */
 
