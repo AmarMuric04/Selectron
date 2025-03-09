@@ -4,7 +4,13 @@ import { RiCheckboxBlankLine } from 'react-icons/ri'
 import { IoCheckboxOutline } from 'react-icons/io5'
 import TodoItem from './TodoItem'
 import AddTodo from './AddTodo'
-import { addTodo, setIsCreating, setNewTodosValue, setTodos } from '@renderer/store/todoSlice'
+import {
+  addTodo,
+  setIsCreating,
+  setIsEditing,
+  setNewTodosValue,
+  setTodos
+} from '@renderer/store/todoSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { ToastContainer, toast } from 'react-toastify'
 import { FaRegHourglassHalf } from 'react-icons/fa6'
@@ -15,7 +21,7 @@ const Todos: React.FC = () => {
   const [gettingTodos, setGettingTodos] = useState(true)
 
   const dispatch = useDispatch()
-  const { isCreating, todos, newTodosValue } = useSelector((state) => state.todo)
+  const { isCreating, todos, newTodosValue, isEditing } = useSelector((state) => state.todo)
   const { user } = useSelector((state) => state.user)
 
   console.log(todos)
@@ -45,22 +51,25 @@ const Todos: React.FC = () => {
   }, [user, dispatch])
 
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
+    const handleKeyDown = (e: KeyboardEvent): void => {
       if (e.key === 'ArrowLeft') {
         setShowCompleted(false)
       } else if (e.key === 'ArrowRight') {
         setShowCompleted(true)
       } else if (e.key === 'a' || e.key === 'A') {
+        console.log(isEditing)
+        if (isEditing) return
         if (!isCreating) {
           e.preventDefault()
           dispatch(setIsCreating(true))
+          dispatch(setIsEditing(''))
         }
       }
     }
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [dispatch, isCreating])
+  }, [dispatch, isCreating, isEditing])
 
   return (
     <section className="w-1/4 min-w-[20rem] h-full bg-zinc-900 rounded-2xl flex flex-col">
@@ -105,7 +114,10 @@ const Todos: React.FC = () => {
 
           {!showCompleted && !isCreating && todos?.uncompleted.length > 0 && (
             <button
-              onClick={() => dispatch(setIsCreating(true))}
+              onClick={() => {
+                dispatch(setIsCreating(true))
+                dispatch(setIsEditing(''))
+              }}
               className="mx-4 text-zinc-700 text-sm py-1 border-dashed border-1 border-zinc-700 rounded-lg mt-4 hover:border-zinc-600 hover:text-zinc-600 transition-all cursor-pointer flex items-center gap-2 justify-center"
             >
               <KeyboardButton>a / A</KeyboardButton>+ Add new todo

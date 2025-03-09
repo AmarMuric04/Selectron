@@ -1,6 +1,9 @@
 import {
   deleteTodo,
+  editTodo,
   setCompleted,
+  setIsCreating,
+  setIsEditing,
   setNewTodosValue,
   setUncompleted
 } from '@renderer/store/todoSlice'
@@ -14,10 +17,9 @@ const TodoItem: React.FC<{
   completed: boolean
   todo: string
 }> = ({ completed, todo }) => {
-  const [isEditing, setIsEditing] = useState(false)
   const [value, setValue] = useState(todo.todo)
   const dispatch = useDispatch()
-  const { newTodosValue } = useSelector((state) => state.todo)
+  const { newTodosValue, isEditing } = useSelector((state) => state.todo)
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLLIElement>) => {
     if (e.key === 'ArrowDown') {
@@ -33,23 +35,24 @@ const TodoItem: React.FC<{
 
   return (
     <li tabIndex={0} onKeyDown={handleKeyDown}>
-      {isEditing && (
+      {isEditing === todo._id && (
         <AddTodo
           onSave={async () => {
             if (newTodosValue.trim()) {
               await window.api?.editTodo(todo._id, newTodosValue)
               setValue(newTodosValue)
+              dispatch(editTodo({ id: todo._id, newTodo: newTodosValue }))
               dispatch(setNewTodosValue(''))
-              setIsEditing(false)
+              dispatch(setIsEditing(''))
             }
           }}
           onCancel={() => {
-            setIsEditing(false)
+            dispatch(setIsEditing(''))
             dispatch(setNewTodosValue(''))
           }}
         />
       )}
-      {!isEditing && (
+      {isEditing !== todo._id && (
         <article className="px-4 py-2 hover:bg-zinc-800 transition-all flex justify-between items-center">
           <div className="flex items-center gap-2">
             <button
@@ -59,10 +62,10 @@ const TodoItem: React.FC<{
               onClick={async () => {
                 if (completed) {
                   await window.api?.uncompleteTodo(todo._id)
-                  dispatch(setUncompleted({ ...todo, todo: value }))
+                  dispatch(setUncompleted(todo._id))
                 } else {
                   await window.api?.completeTodo(todo._id)
-                  dispatch(setCompleted({ ...todo, todo: value }))
+                  dispatch(setCompleted(todo._id))
                 }
               }}
             >
@@ -83,7 +86,8 @@ const TodoItem: React.FC<{
                 title="Edit"
                 aria-label="Edit this todo"
                 onClick={() => {
-                  setIsEditing(true)
+                  dispatch(setIsEditing(todo._id))
+                  dispatch(setIsCreating(false))
                   dispatch(setNewTodosValue(value))
                 }}
                 className="cursor-pointer"

@@ -1,4 +1,4 @@
-import { setIsCreating, setNewTodosValue } from '@renderer/store/todoSlice'
+import { setIsCreating, setIsEditing, setNewTodosValue } from '@renderer/store/todoSlice'
 import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { BsArrowReturnLeft } from 'react-icons/bs'
@@ -6,14 +6,16 @@ import KeyboardButton from '../KeyboardButton'
 
 const AddTodo: React.FC<{ onCancel: () => void; onSave: () => void }> = ({ onCancel, onSave }) => {
   const dispatch = useDispatch()
-  const { isCreating, newTodosValue } = useSelector((state) => state.todo)
+  const { isCreating, newTodosValue, isEditing } = useSelector((state: any) => state.todo)
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    if (isCreating && inputRef.current) {
-      inputRef.current.focus()
+    if (isCreating || isEditing) {
+      inputRef.current?.focus()
     }
-  }, [isCreating])
+
+    if (isCreating) dispatch(setNewTodosValue(''))
+  }, [isCreating, isEditing, dispatch])
 
   return (
     <div className="mx-4 text-zinc-600 p-2 border border-zinc-600 rounded-lg text-sm">
@@ -48,7 +50,6 @@ const AddTodo: React.FC<{ onCancel: () => void; onSave: () => void }> = ({ onCan
           <KeyboardButton>
             <BsArrowReturnLeft />
           </KeyboardButton>
-
           <p>SAVE</p>
         </button>
       </div>
