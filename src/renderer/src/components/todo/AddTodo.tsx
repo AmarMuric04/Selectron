@@ -1,12 +1,13 @@
-import { setIsCreating, setIsEditing, setNewTodosValue } from '@renderer/store/todoSlice'
+import { setNewTodosValue } from '@renderer/store/todoSlice'
 import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { BsArrowReturnLeft } from 'react-icons/bs'
-import KeyboardButton from '../KeyboardButton'
+import KeyboardButton from '../button/KeyboardButton'
+import { RootState } from '@renderer/store/redux'
 
 const AddTodo: React.FC<{ onCancel: () => void; onSave: () => void }> = ({ onCancel, onSave }) => {
   const dispatch = useDispatch()
-  const { isCreating, newTodosValue, isEditing } = useSelector((state: any) => state.todo)
+  const { isCreating, newTodosValue, isEditing } = useSelector((state: RootState) => state.todo)
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {

@@ -26,15 +26,18 @@ async function clearAuthCredentials(): Promise<void> {
   await keytar.deletePassword('Selectron', 'userId')
 }
 
-async function signUserIn(userId: string, token: string): any {
+async function signUserIn(userId: string, token: string): Promise<AddUserType | ApiError> {
   console.log(`User ${userId} signed in successfully with token: ${token}`)
 
   try {
     const response = await axios.post(`${port}/user/auto-sign-in`, { userId })
 
     return response.data.data
-  } catch (error: any) {
-    return error.response.data
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      return error.response?.data as ApiError
+    }
+    throw error
   }
 }
 
@@ -42,12 +45,13 @@ function promptUserToLogIn(): void {
   console.log('No valid credentials found or token expired. Prompting user to log in.')
 }
 
-export async function autoSignIn(): Promise<any> {
+export async function autoSignIn(): Promise<User | null> {
   const { token, userId } = await getAuthCredentials()
 
   if (token && userId) {
     try {
-      const decoded: any = jwtDecode(token)
+      const decoded = jwtDecode(token)
+      if (!decoded || !decoded?.exp) return null
       if (decoded?.exp * 1000 > Date.now()) {
         console.log(new Date(decoded?.exp * 1000))
         const user = await signUserIn(userId, token)
@@ -59,6 +63,7 @@ export async function autoSignIn(): Promise<any> {
         return null
       }
     } catch (error) {
+      console.log(error)
       await clearAuthCredentials()
       promptUserToLogIn()
       return null
@@ -72,7 +77,7 @@ export async function autoSignIn(): Promise<any> {
 export async function signUpHandler(
   _event: IpcMainInvokeEvent,
   userData: User
-): Promise<any | { success: boolean; message: string } | null> {
+): Promise<AddUserType | ApiError> {
   try {
     const { password, email, username } = userData
 
@@ -82,15 +87,18 @@ export async function signUpHandler(
       password
     })
 
-    const data = response.data as any /* AddUserType */
+    const data = response.data as AddUserType
     const token = data.data.token
     const userId = data.data.user._id
 
     await storeAuthCredentials(token, userId)
 
     return data
-  } catch (error: any) {
-    return error.response.data
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      return error.response?.data as ApiError
+    }
+    throw error
   }
 }
 
@@ -100,7 +108,7 @@ export async function logInHandler(
     email: string
     password: string
   }
-): Promise<any | { success: boolean; message: string } | null> {
+): Promise<AddUserType | ApiError> {
   try {
     const { email, password } = userData
 
@@ -109,15 +117,18 @@ export async function logInHandler(
       password
     })
 
-    const data = response.data as any
+    const data = response.data as AddUserType
     const token = data.data.token
     const userId = data.data.user._id.toString()
 
     await storeAuthCredentials(token, userId)
 
     return data
-  } catch (error: any) {
-    return error.response.data
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      return error.response?.data as ApiError
+    }
+    throw error
   }
 }
 
@@ -126,12 +137,14 @@ export async function logOutHandler(): Promise<void> {
   await clearAuthCredentials()
 }
 
-export async function getUsersHandler(): Promise<User[] | null> {
+export async function getUsersHandler(): Promise<User[] | ApiError> {
   try {
     const users = await User.find().lean()
     return users
-  } catch (err) {
-    console.error(err)
-    return null
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      return error.response?.data as ApiError
+    }
+    throw error
   }
 }

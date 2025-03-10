@@ -12,16 +12,17 @@ import { FaEdit, FaPlay } from 'react-icons/fa'
 import { MdCheckBox, MdCheckBoxOutlineBlank, MdDelete } from 'react-icons/md'
 import { useDispatch, useSelector } from 'react-redux'
 import AddTodo from './AddTodo'
+import { RootState } from '@renderer/store/redux'
 
 const TodoItem: React.FC<{
   completed: boolean
-  todo: string
+  todo: Todo
 }> = ({ completed, todo }) => {
   const [value, setValue] = useState(todo.todo)
   const dispatch = useDispatch()
-  const { newTodosValue, isEditing } = useSelector((state) => state.todo)
+  const { newTodosValue, isEditing } = useSelector((state: RootState) => state.todo)
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLLIElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLLIElement>): void => {
     if (e.key === 'ArrowDown') {
       e.preventDefault()
       const next = e.currentTarget.nextElementSibling as HTMLElement

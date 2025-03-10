@@ -12,37 +12,36 @@ import {
   setTodos
 } from '@renderer/store/todoSlice'
 import { useDispatch, useSelector } from 'react-redux'
-import { ToastContainer, toast } from 'react-toastify'
+import { ToastContainer } from 'react-toastify'
 import { FaRegHourglassHalf } from 'react-icons/fa6'
-import KeyboardButton from '../KeyboardButton'
+import KeyboardButton from '../button/KeyboardButton'
+import { RootState } from '@renderer/store/redux'
 
 const Todos: React.FC = () => {
   const [showCompleted, setShowCompleted] = useState(false)
   const [gettingTodos, setGettingTodos] = useState(true)
 
   const dispatch = useDispatch()
-  const { isCreating, todos, newTodosValue, isEditing } = useSelector((state) => state.todo)
-  const { user } = useSelector((state) => state.user)
+  const { isCreating, todos, newTodosValue, isEditing } = useSelector(
+    (state: RootState) => state.todo
+  )
+  const { user } = useSelector((state: RootState) => state.user)
 
-  console.log(todos)
-
-  const notify = (text: string): void => {
-    toast.success(text)
-  }
+  // const notify = (text: string): void => {
+  //   toast.success(text)
+  // }
 
   useEffect(() => {
     if (showCompleted) dispatch(setIsCreating(false))
-  }, [showCompleted])
+  }, [showCompleted, dispatch])
 
   useEffect(() => {
     if (!user) return
 
-    const getTodos = async () => {
-      const todos = await window.api?.getTodos()
+    const getTodos = async (): Promise<void> => {
+      const response = await window.api?.getTodos()
 
-      console.log(todos.data)
-
-      dispatch(setTodos(todos.data))
+      dispatch(setTodos(response?.data))
     }
 
     getTodos()
@@ -68,7 +67,7 @@ const Todos: React.FC = () => {
     }
 
     window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
+    return (): void => window.removeEventListener('keydown', handleKeyDown)
   }, [dispatch, isCreating, isEditing])
 
   return (

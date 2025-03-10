@@ -7,8 +7,9 @@ type User = {
 }
 
 type Todo = {
+  _id: string
   todo: string
-  user: string
+  user?: string
 }
 
 type Todos = {
@@ -16,8 +17,27 @@ type Todos = {
   completed: Todo[]
 }
 
-type AddUserType = {
+type ValidationError = {
+  type?: string
+  msg: string
+  path: string
+  location?: string
+  value?: any
+}
+
+type ReturnType = {
   success: boolean
   message: string
+}
+
+type ApiError = ReturnType & {
+  data: ValidationError[]
+}
+
+type AddUserType = ReturnType & {
   data: User
+}
+
+type GetTodosType = ReturnType & {
+  data: Todo[]
 }

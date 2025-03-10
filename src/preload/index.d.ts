@@ -10,7 +10,7 @@ declare global {
       logIn: (userData: { email: string; password: string }) => Promise<AddUserType>
       getUsers: () => Promise<User[]>
       addTodo: (todo: string) => Promise<Todo>
-      getTodos: () => Promise<Todo[]>
+      getTodos: () => Promise<GetTodosType>
       autoSignIn: () => Promise<void>
       logOut: () => Promise<void>
       completeTodo: (todo: string) => Promise<void>

@@ -24,7 +24,7 @@ const USER_INFO = { username: '', email: '', password: '' }
 const AuthForm: React.FC<{ type: string }> = ({ type }) => {
   const [userInfo, setUserInfo] = useState<User>(USER_INFO)
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<any>([])
+  const [error, setError] = useState<ApiError>([])
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -73,12 +73,13 @@ const AuthForm: React.FC<{ type: string }> = ({ type }) => {
 
   const title = isLoggingIn ? 'Log In' : 'Sign Up'
 
-  const notify = (success: boolean, message: any): void => {
+  const notify = (success: boolean, message: string | ApiError): void => {
     if (success) toast.success(message)
-    else
+    else if (Array.isArray(message)) {
       message.forEach((err) => {
         toast.error(err.msg)
       })
+    }
   }
 
   return (

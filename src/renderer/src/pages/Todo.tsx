@@ -4,25 +4,26 @@ import { FaRegUserCircle } from 'react-icons/fa'
 import { IoMdLogOut } from 'react-icons/io'
 import { setUser } from '@renderer/store/userSlice'
 import { useNavigate } from 'react-router-dom'
-import { toast, ToastContainer } from 'react-toastify'
+import { ToastContainer } from 'react-toastify'
 import { useEffect } from 'react'
 import { SlSettings } from 'react-icons/sl'
-import KeyboardButton from '@renderer/components/KeyboardButton'
+import KeyboardButton from '@renderer/components/button/KeyboardButton'
 import { BsArrowRight } from 'react-icons/bs'
 import { BsArrowLeft } from 'react-icons/bs'
+import { RootState } from '@renderer/store/redux'
 
 const Todo: React.FC = () => {
-  const { user } = useSelector((state) => state.user)
+  const { user } = useSelector((state: RootState) => state.user)
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const notify = (message: string): void => {
-    toast.success(message)
-  }
+  // const notify = (message: string): void => {
+  //   toast.success(message)
+  // }
 
   useEffect(() => {
     if (!user._id) navigate('/')
-  }, [user])
+  }, [user, navigate])
 
   const handleLogOut = async (): Promise<void> => {
     await window.api?.logOut()
