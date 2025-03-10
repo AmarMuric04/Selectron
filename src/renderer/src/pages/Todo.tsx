@@ -57,7 +57,7 @@ const Todo: React.FC = () => {
           <IoMdLogOut />
         </button>
       </header>
-      <div className="flex gap-2 h-full">
+      <div className="flex gap-2 h-full max-h-[87.5%]">
         <Todos />
         <section className="flex-grow bg-zinc-900 rounded-xl"></section>
       </div>

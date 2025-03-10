@@ -20,3 +20,7 @@
 .throb {
   animation: throbber 1.5s linear infinite;
 }
+
+*::-webkit-scrollbar {
+  display: none;
+}

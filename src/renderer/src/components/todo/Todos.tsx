@@ -51,6 +51,7 @@ const Todos: React.FC = () => {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent): void => {
+      if (isEditing || isCreating) return
       if (e.key === 'ArrowLeft') {
         setShowCompleted(false)
       } else if (e.key === 'ArrowRight') {
@@ -71,7 +72,7 @@ const Todos: React.FC = () => {
   }, [dispatch, isCreating, isEditing])
 
   return (
-    <section className="w-1/4 min-w-[20rem] h-full bg-zinc-900 rounded-2xl flex flex-col">
+    <section className="w-1/4 min-w-[20rem] pb-8 overflow-auto h-full bg-zinc-900 rounded-2xl flex flex-col">
       <ToastContainer />
       <header className="flex gap-2 items-center text-zinc-700 p-4 text-sm">
         <button
@@ -97,7 +98,7 @@ const Todos: React.FC = () => {
       {gettingTodos && (
         <FaRegHourglassHalf className="throb text-zinc-700 self-center my-auto" size={40} />
       )}
-      {(!gettingTodos || !todos) && (
+      {!gettingTodos && todos && (
         <>
           {!showCompleted && (
             <ul className="text-zinc-500 flex flex-col gap-2 mb-4">
@@ -146,9 +147,10 @@ const Todos: React.FC = () => {
               <p className="font-semibold">You don{"'"}t have any todos</p>
               <button
                 onClick={() => dispatch(setIsCreating(true))}
-                className="underline text-zinc-600 hover:text-zinc-500 font-semibold transition-all cursor-pointer"
+                className="text-zinc-600 hover:text-zinc-500 font-semibold transition-all cursor-pointer flex gap-2 items-center"
               >
-                Add a new todo
+                <KeyboardButton>a / A</KeyboardButton>
+                <span className="underline">Add a new todo</span>
               </button>
             </div>
           )}

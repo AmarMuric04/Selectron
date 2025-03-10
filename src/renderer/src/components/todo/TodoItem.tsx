@@ -20,9 +20,10 @@ const TodoItem: React.FC<{
 }> = ({ completed, todo }) => {
   const [value, setValue] = useState(todo.todo)
   const dispatch = useDispatch()
-  const { newTodosValue, isEditing } = useSelector((state: RootState) => state.todo)
+  const { newTodosValue, isEditing, isCreating } = useSelector((state: RootState) => state.todo)
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLLIElement>): void => {
+  const handleKeyDown = async (e: React.KeyboardEvent<HTMLLIElement>): Promise<void> => {
+    if (isEditing || isCreating) return
     if (e.key === 'ArrowDown') {
       e.preventDefault()
       const next = e.currentTarget.nextElementSibling as HTMLElement
@@ -31,6 +32,22 @@ const TodoItem: React.FC<{
       e.preventDefault()
       const prev = e.currentTarget.previousElementSibling as HTMLElement
       if (prev) prev.focus()
+    } else if (e.key === 'e') {
+      e.preventDefault()
+      dispatch(setIsEditing(todo._id))
+      dispatch(setNewTodosValue(todo.todo))
+    } else if (e.key === 'd') {
+      e.preventDefault()
+      await window.api?.deleteTodo(todo._id)
+      dispatch(deleteTodo(todo._id))
+    } else if (e.key === 'Enter') {
+      if (completed) {
+        await window.api?.uncompleteTodo(todo._id)
+        dispatch(setUncompleted(todo._id))
+      } else {
+        await window.api?.completeTodo(todo._id)
+        dispatch(setCompleted(todo._id))
+      }
     }
   }
 
