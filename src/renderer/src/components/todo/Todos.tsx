@@ -58,7 +58,7 @@ const Todos: React.FC = () => {
         setShowCompleted(true)
       } else if (e.key === 'a' || e.key === 'A') {
         console.log(isEditing)
-        if (isEditing) return
+        if (isEditing || showCompleted) return
         if (!isCreating) {
           e.preventDefault()
           dispatch(setIsCreating(true))
@@ -69,7 +69,7 @@ const Todos: React.FC = () => {
 
     window.addEventListener('keydown', handleKeyDown)
     return (): void => window.removeEventListener('keydown', handleKeyDown)
-  }, [dispatch, isCreating, isEditing])
+  }, [dispatch, isCreating, isEditing, showCompleted])
 
   return (
     <section className="w-1/4 min-w-[20rem] pb-8 overflow-auto h-full bg-zinc-900 rounded-2xl flex flex-col">

@@ -1,6 +1,4 @@
 import jwt from 'jsonwebtoken'
-import dotenv from 'dotenv'
-dotenv.config()
 
 export default function isAuth(req, res, next) {
   const authHeader = req.get('Authorization')
@@ -18,6 +16,7 @@ export default function isAuth(req, res, next) {
   try {
     decodedToken = jwt.verify(token, process.env.JWT_SECRET)
   } catch (err) {
+    console.log(err)
     const error = new Error('Please sign in and try again.')
     error.statusCode = 401
     throw error

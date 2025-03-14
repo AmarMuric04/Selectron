@@ -3,15 +3,16 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
-export const connectToDatabase = async (): Promise<void> => {
+const connection = process.env.MONGODB_URI || ''
+async function connectToDatabase(): Promise<void> {
   try {
-    const uri = process.env.MONGODB_URI || 'a random mongodb uri'
-    console.log('Connecting to MongoDB')
-    await mongoose.connect(uri)
-    console.log('Connected to MongoDB with Mongoose')
+    await mongoose.connect(connection)
+
+    console.log('✅ Connected to MongoDB')
   } catch (error) {
-    console.error('Mongoose connection error:', error)
+    console.error('❌ MongoDB connection error:', error)
+    process.exit(1)
   }
 }
 
-export default mongoose
+export { connectToDatabase }

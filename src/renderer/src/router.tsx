@@ -1,9 +1,9 @@
-import { createBrowserRouter } from 'react-router-dom'
+import { createHashRouter } from 'react-router-dom'
 import Root from './components/Root'
 import Auth from './pages/Auth'
 import Todo from './pages/Todo'
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path: '/',
     element: <Root />,

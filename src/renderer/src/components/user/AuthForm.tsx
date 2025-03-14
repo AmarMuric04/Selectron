@@ -49,11 +49,12 @@ const AuthForm: React.FC<{ type: string }> = ({ type }) => {
 
   const handleAddUser = async (): Promise<void> => {
     setLoading(true)
-    let response
+    let response: AddUserType
     if (type === 'signup') response = await window.api.signUp(userInfo)
     else if (type === 'login')
       response = await window.api.logIn({ email: userInfo.email, password: userInfo.password })
 
+    console.log(response)
     if (response.success) {
       toast.dismiss()
       setUserInfo(USER_INFO)
@@ -94,7 +95,7 @@ const AuthForm: React.FC<{ type: string }> = ({ type }) => {
           </p>
         </div>
         <div className="flex items-center flex-col text-center my-4">
-          <h1 className="font-serif text-3xl">{isLoggingIn ? 'Welcome Back!' : 'Hello There!'}</h1>
+          <h1 className="text-3xl font-bold">{isLoggingIn ? 'Welcome Back!' : 'Hello There!'}</h1>
           <p className="text-sm text-gray-300">
             {isLoggingIn
               ? 'Enter your email and password to your account'
@@ -109,8 +110,8 @@ const AuthForm: React.FC<{ type: string }> = ({ type }) => {
           variant="outlined"
           type="email"
           onFocus={() => setError([])}
-          error={error.some((err) => err?.path === 'email')}
-          helperText={error.find((err) => err?.path === 'email')?.msg}
+          error={error?.some((err) => err?.path === 'email')}
+          helperText={error?.find((err) => err?.path === 'email')?.msg}
           sx={{
             input: { color: 'white' },
             '& label': { color: '#3f3f46' },
@@ -138,8 +139,8 @@ const AuthForm: React.FC<{ type: string }> = ({ type }) => {
             variant="outlined"
             type="text"
             onFocus={() => setError([])}
-            error={error.some((err) => err?.path === 'username')}
-            helperText={error.find((err) => err?.path === 'username')?.msg}
+            error={error?.some((err) => err?.path === 'username')}
+            helperText={error?.find((err) => err?.path === 'username')?.msg}
             sx={{
               input: { color: 'white' },
               '& label': { color: '#3f3f46' },
@@ -186,7 +187,7 @@ const AuthForm: React.FC<{ type: string }> = ({ type }) => {
             onChange={(e) => setUserInfo({ ...userInfo, password: e.target.value })}
             id="outlined-adornment-password"
             type={showPassword ? 'text' : 'password'}
-            error={error.some((err) => err?.path === 'password')}
+            error={error?.some((err) => err?.path === 'password')}
             label="Password"
             onFocus={() => setError([])}
             sx={{
@@ -207,8 +208,8 @@ const AuthForm: React.FC<{ type: string }> = ({ type }) => {
               </InputAdornment>
             }
           />
-          <FormHelperText error={error.some((err) => err?.path === 'password')}>
-            {error.find((err) => err?.path === 'password')?.msg}
+          <FormHelperText error={error?.some((err) => err?.path === 'password')}>
+            {error?.find((err) => err?.path === 'password')?.msg}
           </FormHelperText>
         </FormControl>
 

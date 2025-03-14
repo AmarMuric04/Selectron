@@ -11,9 +11,7 @@ import {
 } from './handlers/userHandler'
 
 import dotenv from 'dotenv'
-dotenv.config()
 
-import './backend/server.js'
 import {
   addTodoHandler,
   completeTodoHandler,
@@ -22,6 +20,13 @@ import {
   getTodosHandler,
   uncompleteTodoHandler
 } from './handlers/todoHandler'
+
+import path from 'path'
+
+const envPath = path.join(process.resourcesPath, '.env')
+dotenv.config({ path: envPath })
+
+import('./backend/server.js')
 
 function createWindow(): void {
   const mainWindow = new BrowserWindow({
@@ -39,6 +44,8 @@ function createWindow(): void {
     frame: false
   })
 
+  mainWindow.webContents.openDevTools()
+
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
   })
@@ -49,9 +56,12 @@ function createWindow(): void {
   })
 
   if (process.env.NODE_ENV === 'development') {
+    console.log('Loading dev URL:', process.env.ELECTRON_RENDERER_URL || 'http://localhost:3000')
     mainWindow.loadURL(process.env.ELECTRON_RENDERER_URL || 'http://localhost:3000')
   } else {
-    mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
+    const filePath = join(__dirname, '../renderer/index.html')
+    console.log('Loading file:', filePath)
+    mainWindow.loadFile(filePath)
   }
 
   mainWindow.focus()
@@ -107,7 +117,7 @@ ipcMain.handle('edit-todo', editTodoHandler)
 
 /* General handlers */
 
-ipcMain.on('frame-interaction', (event, option: string) => {
+ipcMain.on('frame-interaction', (_event, option: string) => {
   console.log('Frame interaction option:', option)
   const win = BrowserWindow.getFocusedWindow()
   if (win) {
